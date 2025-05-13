@@ -10,9 +10,24 @@ body {
 }
 
 .logo-frogindev {
-	transition: transform 1s ease;
-	transform: translate(-43.5dvw, -34dvh) scale(0.2);
-	
+	font-size: 0.2rem;
+}
+
+
+.column-terminal {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	top: 12.5dvh;
+	left: 0.85dvw;
+}
+.column-terminal-span {
+	font-size: 2rem;
+}
+
+.column-start {
+	display: flex;
+	flex-direction: column;
 }
 
 .terminal {
