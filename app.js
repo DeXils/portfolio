@@ -1,14 +1,16 @@
+let terminal = document.getElementById('terminal');
+let logoFrogInDev = document.getElementById('logoFrogInDev');
+let columnTerminal = document.getElementById('columnTerminal');
+let pressStart = document.getElementById('pressStart');
+
+let startSound = new Audio("start.mp3");
+
 window.onload = function() {
     setTimeout(() => {
         document.querySelectorAll(".text").forEach(el => el.style.display = "block");
         document.getElementById("terminal").classList.add("no-border");
     }, 600);
 };
-
-let terminal = document.getElementById('terminal');
-let logoFrogInDev = document.getElementById('logoFrogInDev');
-let columnTerminal = document.getElementById('columnTerminal');
-let pressStart = document.getElementById('pressStart');
 
 // Écoute de l'événement 'keydown' pour détecter une touche pressée
 window.addEventListener('keydown', function() {
@@ -27,7 +29,9 @@ window.addEventListener('keydown', function() {
 
 
 function startComputer() {
+    startSound.play();
     let memoryTest = 640;
+    let dataToInstall = 0;
 
     const columnStart = document.createElement('div');
     columnStart.classList.add('column-start');
@@ -47,6 +51,7 @@ function startComputer() {
     const memoryInterval = setInterval(() => {
         if (i >= 51) {
             clearInterval(memoryInterval);
+            displayRamTest();
             return;
         }
 
@@ -59,10 +64,94 @@ function startComputer() {
         memorySpeedTestSpan.innerText = `Memory Test : ${memoryTest}K OK`;
         i++;
     }, 25);
-	
-	const ramTestSpan = document.createElement('span');
-	ramTestSpan.innerHTML = "<br>Detecting potential error :<br>&nbsp;- Ram install ? Yes | 1 slot remaining" 
-	ramTestSpan.classList.add('column-terminal-span');
-    columnStart.appendChild(ramTestSpan);
+
+    function displayRamTest() {
+        const ramTestSpan = document.createElement('span');
+        ramTestSpan.classList.add('column-terminal-span');
+        columnStart.appendChild(ramTestSpan);
+
+        const tests = [
+            {question: "&nbsp;- Ram install ?", answer: "Yes | 1 slot remaining<br>"},
+            {question: "&nbsp;- Graphic card install ?", answer: "Yes<br>"},
+            {question: "&nbsp;- Audio system install ?", answer: "Yes<br>"},
+            {question: "&nbsp;- Data OK ?", answer: "No"}
+        ];
+
+        let index = 0;
+
+        function showTest() {
+            if (index >= tests.length) {
+                displayInstallData();
+                return;
+            }
+
+            ramTestSpan.innerHTML += tests[index].question;
+
+            setTimeout(() => {
+                ramTestSpan.innerHTML += " " + tests[index].answer;
+                index++;
+                setTimeout(showTest, 500);
+            }, 500);
+        }
+
+        showTest();
+    }
+
+    function displayInstallData() {
+        const installDataSpan = document.createElement('span');
+        installDataSpan.classList.add('column-terminal-span');
+        columnStart.appendChild(installDataSpan);
+
+        let progress = 0;
+
+        const downloadInterval = setInterval(() => {
+            if (progress >= 100) {
+                clearInterval(downloadInterval);
+                installDataSpan.innerText = `Data Install From DeXilsCore : 100% - Complete`;
+                setTimeout(() => {
+                    columnStart.remove();
+                    showSystemConfiguration();
+                }, 1000);
+                return;
+            }
+
+            progress += Math.floor(Math.random() * 5) + 1; // Augmente entre 1 et 5%
+            if (progress > 100) progress = 100;
+
+            installDataSpan.innerText = `Data Install From DeXilsCore : ${progress}%`;
+        }, 100);
+    }
 }
 
+
+function showSystemConfiguration() {
+    const columnStart = document.createElement('div');
+    columnStart.classList.add('column-start');
+    columnTerminal.appendChild(columnStart);
+
+    const tableConfiguration = document.createElement('div');
+    tableConfiguration.classList.add('table-configuration');
+    columnStart.appendChild(tableConfiguration);
+
+    const dexilsPU = document.createElement('span');
+    dexilsPU.classList.add('column-terminal-span');
+    dexilsPU.innerHTML =
+        "&nbsp;&nbsp;&nbsp;DeXilsPU Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;DeXils2025-A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Base Memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;640K<br>"   +
+        "&nbsp;&nbsp;&nbsp;Co-Processor &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;FrogInDev138&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Extended Memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;31744K<br>" +
+        "&nbsp;&nbsp;&nbsp;DeXilsPU Clock &nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;144MHz&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cache Memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None"
+    tableConfiguration.appendChild(dexilsPU);
+
+    const ramDrive = document.createElement('span');
+    ramDrive.style.borderTop = '2px solid #00ff00';
+    ramDrive.style.paddingTop = '5px';
+    ramDrive.style.marginTop = '5px';
+    ramDrive.classList.add('column-terminal-span');
+    ramDrive.innerHTML =
+        "&nbsp;&nbsp;&nbsp;Ram Card A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;32 Go, DDR4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Speed Memomry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;3600 MHz<br>" +
+        "&nbsp;&nbsp;&nbsp;Ram Card B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;32 Go, DDR4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Speed Memomry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;3600 MHz<br>" +
+        "&nbsp;&nbsp;&nbsp;Ram Card C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;32 Go, DDR4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Speed Memomry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;3600 MHz<br>" +
+        "&nbsp;&nbsp;&nbsp;Ram Card D&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Speed Memomry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0<br>" +
+        "&nbsp;&nbsp;&nbsp;NVME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;4 To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size Hard Drive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;2.5 inch<br>" +
+        "&nbsp;&nbsp;&nbsp;SSD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;8 To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size Hard Drive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;2.5 inch<br>"
+    tableConfiguration.appendChild(ramDrive);
+}
