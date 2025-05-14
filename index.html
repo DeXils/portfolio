@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="FrogInDev Terminal Screen">
 	<link href="style.css" rel="stylesheet"/>
-    <title>FrogInDev Portfolio</title>
+    <title>FrogInDev Terminal</title>
 </head>
 <body>
 <div class="terminal" id="terminal">
@@ -35,6 +35,10 @@
 	</pre>
 	</div>
     <span class="text" style="display: none; font-size: 2.5rem; margin-top: 1rem;" id="pressStart">Press a key to start<span class="blink">_</span></span>
+	<div class="terminal-mod terminal-input-hidden" id="terminalMod">
+		<span class="terminal-input-user">DeXils@FrogInDev</span><span class="terminal-input-separation">:</span><span class="terminal-input-path">~</span><span class="terminal-relative-path">$</span>
+		<input type="text" id="inputTerminal"/>
+	</div>
 </div>
 
 <script src="app.js"></script>
