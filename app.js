@@ -2,8 +2,11 @@ let terminal = document.getElementById('terminal');
 let logoFrogInDev = document.getElementById('logoFrogInDev');
 let columnTerminal = document.getElementById('columnTerminal');
 let pressStart = document.getElementById('pressStart');
+let terminalMod = document.getElementById('terminalMod');
+let inputTerminal = document.getElementById('inputTerminal');
 
 let startSound = new Audio("start.mp3");
+
 
 window.onload = function() {
     setTimeout(() => {
@@ -136,9 +139,9 @@ function showSystemConfiguration() {
     const dexilsPU = document.createElement('span');
     dexilsPU.classList.add('column-terminal-span');
     dexilsPU.innerHTML =
-        "&nbsp;&nbsp;&nbsp;DeXilsPU Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;DeXils2025-A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Base Memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;640K<br>"   +
-        "&nbsp;&nbsp;&nbsp;Co-Processor &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;FrogInDev138&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Extended Memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;31744K<br>" +
-        "&nbsp;&nbsp;&nbsp;DeXilsPU Clock &nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;144MHz&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cache Memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None"
+        "&nbsp;&nbsp;&nbsp;DeXilsPU Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;DeXils2025-A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Base Memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;640K<br>"   +
+        "&nbsp;&nbsp;&nbsp;Co-Processor &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;FrogInDev138&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Extended Memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;31744K<br>" +
+        "&nbsp;&nbsp;&nbsp;DeXilsPU Clock &nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;144MHz&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cache Memory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None"
     tableConfiguration.appendChild(dexilsPU);
 
     const ramDrive = document.createElement('span');
@@ -154,4 +157,74 @@ function showSystemConfiguration() {
         "&nbsp;&nbsp;&nbsp;NVME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;4 To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size Hard Drive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;2.5 inch<br>" +
         "&nbsp;&nbsp;&nbsp;SSD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;8 To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size Hard Drive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;2.5 inch<br>"
     tableConfiguration.appendChild(ramDrive);
+	
+	const pciDevice = document.createElement('span');
+	pciDevice.classList.add('column-terminal-span');
+	pciDevice.innerHTML = "<br>PCI device listing....."
+	columnStart.appendChild(pciDevice);
+	
+	const infoPci = document.createElement('span');
+	infoPci.classList.add('column-terminal-span');
+	infoPci.innerHTML = "Bus No.&nbsp;&nbsp;Device No.&nbsp;&nbsp;Func No.&nbsp;&nbsp;Vendor ID&nbsp;&nbsp;Device ID&nbsp;&nbsp;Device Class&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IRQ"
+	columnStart.appendChild(infoPci);
+	
+	const dataPci = document.createElement('span');
+	dataPci.classList.add('column-terminal-span');
+	dataPci.style.borderTop = '2px solid #00ff00';
+	dataPci.style.paddingTop = '5px';
+	dataPci.style.marginTop = '5px';
+	dataPci.innerHTML = "&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8086&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1230&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDE Controller &nbsp;&nbsp;&nbsp;&nbsp;14"
+	columnStart.appendChild(dataPci);
+	
+	setTimeout(() => {
+		const dmiPool = document.createElement('span');
+		dmiPool.classList.add('column-terminal-span');
+		dmiPool.innerText = "Verifying DMI Pool Data....."
+		columnStart.appendChild(dmiPool);
+		setTimeout(() => {
+			const startPortfolio = document.createElement('span');
+			startPortfolio.classList.add('column-terminal-span');
+			startPortfolio.innerText = "Starting FrogInDev-Portfolio..."
+			columnStart.appendChild(startPortfolio);
+			setTimeout(() => {
+				columnStart.remove();
+				showTerminal();
+			},300);
+			
+		},2000);
+	}, 600)
+	
 }
+
+function showTerminal() {
+	switchTerminalMod();
+	const columnTerminalUser = document.createElement('div');
+	columnTerminalUser.classList.add('terminal-user');
+	terminal.appendChild(columnTerminalUser);
+	
+	const welcomeTerminal = document.createElement('span');
+	welcomeTerminal.classList.add('terminal-span');
+	welcomeTerminal.innerText = "Welcome to FrogInDev Environment\n You can use your keyboard arrows ↑↓ to navigate and use ↵ to validate. \nYou can also switch to a terminal mod with the combination ctrl + space"
+	columnTerminalUser.appendChild(welcomeTerminal);
+	
+	const presentationOption = document.createElement('span');
+	presentationOption.classList.add('terminal-span');
+	presentationOption.innerText = "\n- Presentation of FrogInDev";
+	columnTerminalUser.appendChild(presentationOption);
+}
+
+function switchTerminalMod() {
+	window.addEventListener('keydown', function(event) {
+		// Vérification si les touches Ctrl et Espace sont pressées
+		if (event.ctrlKey && event.code === 'Space') {
+			console.log(terminalMod.classList[1]);
+			if(terminalMod.classList[1] === "terminal-input-hidden") {
+				terminalMod.classList.remove('terminal-input-hidden');
+			}else {
+				terminalMod.classList.add('terminal-input-hidden');
+			}
+		}
+	});
+}
+
+
