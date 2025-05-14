@@ -63,6 +63,15 @@ body {
 	z-index: 2;
 }
 
+.table-configuration {
+	margin-top: 5px;
+	display: flex;
+	flex-direction: column;
+	border: 5px solid #00ff00;
+	width: 98dvw;
+	height: 36dvh;
+}
+
 @keyframes blink {to { visibility: hidden; }}
 
 @keyframes start-computer {
