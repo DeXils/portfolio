@@ -73,13 +73,20 @@ body {
 }
 
 .terminal-user {
-	display:flex;
+	display: flex;
 	flex-direction: column;
 	position: absolute;
 	top: 23dvh;
 	left: 0.85dvw;
-	width:calc(100dvw - 1.7dvw);
-	height:calc(88dvh - 28dvh);
+	width: calc(100dvw - 1.7dvw);
+	height: calc(88dvh - 28dvh);
+	justify-content: flex-start;  /* Ajoute ceci pour éviter le recentrage vertical */
+	box-sizing: border-box;       /* Pour éviter les débordements imprévus */
+	padding-right: 1rem;          /* Optionnel pour empêcher un débordement texte */
+}
+
+#terminalContent {
+	overflow-y: auto;
 }
 
 .terminal-span,
@@ -119,7 +126,6 @@ body {
     outline: none;
     text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
     width: 80dvw;
-	caret-shape: underscore;
 }
 
 .terminal-input-user {
@@ -158,4 +164,10 @@ body {
 	70% {opacity: 0.85;}
 	80% {opacity: 1;}
 	90% {opacity: 0.9;}
+}
+
+.selected-option {
+    background-color: rgba(0, 255, 0, 0.2); /* surlignage léger */
+    border-left: 2px solid #00ff00;
+    padding-left: 5px;
 }
