@@ -6,7 +6,13 @@ let terminalMod = document.getElementById('terminalMod');
 let inputTerminal = document.getElementById('inputTerminal');
 
 let startSound = new Audio("start.mp3");
+let enterSound = new Audio("enter.mp3");
 
+let columnTerminalUser;
+let selectedIndex = 0;
+let options = [];
+let terminalInputPath = document.getElementById('terminalInputPath')
+let welcomeTerminal;
 
 window.onload = function() {
     setTimeout(() => {
@@ -27,7 +33,8 @@ window.addEventListener('keydown', function() {
     // Supprimer l'écouteur après la première pression
     window.removeEventListener('keydown', arguments.callee);
 	
-	startComputer();
+	//startComputer();
+	showTerminal();
 });
 
 
@@ -126,7 +133,6 @@ function startComputer() {
     }
 }
 
-
 function showSystemConfiguration() {
     const columnStart = document.createElement('div');
     columnStart.classList.add('column-start');
@@ -197,34 +203,246 @@ function showSystemConfiguration() {
 }
 
 function showTerminal() {
-	switchTerminalMod();
-	const columnTerminalUser = document.createElement('div');
-	columnTerminalUser.classList.add('terminal-user');
-	terminal.appendChild(columnTerminalUser);
-	
-	const welcomeTerminal = document.createElement('span');
-	welcomeTerminal.classList.add('terminal-span');
-	welcomeTerminal.innerText = "Welcome to FrogInDev Environment\n You can use your keyboard arrows ↑↓ to navigate and use ↵ to validate. \nYou can also switch to a terminal mod with the combination ctrl + space"
-	columnTerminalUser.appendChild(welcomeTerminal);
-	
-	const presentationOption = document.createElement('span');
-	presentationOption.classList.add('terminal-span');
-	presentationOption.innerText = "\n- Presentation of FrogInDev";
-	columnTerminalUser.appendChild(presentationOption);
+    columnTerminalUser = document.createElement('div');
+    columnTerminalUser.classList.add('terminal-user');
+    terminal.appendChild(columnTerminalUser);
+
+    const terminalHeader = document.createElement('div');
+    terminalHeader.id = 'terminalHeader';
+    columnTerminalUser.appendChild(terminalHeader);
+
+    welcomeTerminal = document.createElement('span');
+    welcomeTerminal.id = 'welcomeTerminal';
+    welcomeTerminal.classList.add('terminal-span');
+    welcomeTerminal.innerHTML = "Welcome to FrogInDev Environment<br> You can use your keyboard arrows ↑↓ to navigate and use ↵ to validate. <br>You can also switch to terminal mod with the combination ctrl + space<br>";
+    terminalHeader.appendChild(welcomeTerminal);
+
+    const terminalContent = document.createElement('div');
+    terminalContent.id = 'terminalContent';
+	terminalContent.innerHTML = "<br>"
+    columnTerminalUser.appendChild(terminalContent);
+
+    const optionData = [
+        { id: 'presentationOption', label: 'Presentation of FrogInDev' },
+        { id: 'experienceOption', label: 'Experiences of FrogInDev' },
+        { id: 'projectsOption', label: 'Projects of FrogInDev' },
+        { id: 'skillsOption', label: 'Skills of FrogInDev' },
+        { id: 'contactOption', label: 'Contact of FrogInDev' }
+    ];
+
+    optionData.forEach(opt => {
+        const span = document.createElement('span');
+        span.classList.add('terminal-span');
+        span.id = opt.id;
+        span.innerText = `- ${opt.label}\n`;
+        terminalContent.appendChild(span);
+    });
+
+
+    options = Array.from(terminalContent.querySelectorAll('.terminal-span'));
+    selectedIndex = 0;
+    if (options[selectedIndex]) {
+		options[selectedIndex].classList.add('selected-option');
+	}
+
+    switchTerminalMod();
 }
+
+
+let interactiveNavEnabled = false;
 
 function switchTerminalMod() {
-	window.addEventListener('keydown', function(event) {
-		// Vérification si les touches Ctrl et Espace sont pressées
-		if (event.ctrlKey && event.code === 'Space') {
-			console.log(terminalMod.classList[1]);
-			if(terminalMod.classList[1] === "terminal-input-hidden") {
-				terminalMod.classList.remove('terminal-input-hidden');
-			}else {
-				terminalMod.classList.add('terminal-input-hidden');
-			}
-		}
-	});
+    // Écoute du switch de mode (Ctrl + Espace)
+    window.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.code === 'Space') {
+            const isInteractive = terminalMod.classList.contains("terminal-input-hidden");
+
+            if (isInteractive) {
+                // Passage en mode terminal (bash)
+                terminalMod.classList.remove('terminal-input-hidden');
+                inputTerminal.focus();
+
+                if (welcomeTerminal) {
+                    welcomeTerminal.innerHTML =
+                        "Welcome to FrogInDev Environment <br> You can write bash commands to navigate. <br>You can also switch to interactive mod with the combination ctrl + space <br>";
+                }
+
+                // Supprimer le surlignage si existant
+                if (Array.isArray(options) && options.length > 0 && options[selectedIndex]) {
+                    options[selectedIndex].classList.remove('selected-option');
+                }
+
+                // Fix visuel : forçage de la hauteur de l'élément afin d'évité un décalage
+				terminal.style.height = "0"
+				setTimeout(() => {
+					terminal.style.height = "100vh";
+				},10)
+                
+
+            } else {
+                // Passage en mode interactif
+                terminalMod.classList.add('terminal-input-hidden');
+                
+                if (welcomeTerminal) {
+                    welcomeTerminal.innerHTML =
+                        "Welcome to FrogInDev Environment<br> You can use your keyboard arrows ↑↓ to navigate and use ↵ to validate. <br>You can also switch to terminal mod with the combination ctrl + space<br>";
+                }
+
+                // Réappliquer le surlignage si des options sont présentes
+                if (Array.isArray(options) && options.length > 0 && options[selectedIndex]) {
+                    options[selectedIndex].classList.add('selected-option');
+                }
+            }
+        }
+    });
+
+    // Une seule fois : navigation fléchée
+    if (!interactiveNavEnabled) {
+        interactiveNavEnabled = true;
+
+        window.addEventListener('keydown', function(event) {
+            if (!terminalMod.classList.contains('terminal-input-hidden')) return;
+
+            if (event.code === 'ArrowDown') {
+                if (options[selectedIndex]) {
+                    options[selectedIndex].classList.remove('selected-option');
+                }
+                selectedIndex = (selectedIndex + 1) % options.length;
+                if (options[selectedIndex]) {
+                    options[selectedIndex].classList.add('selected-option');
+                }
+                event.preventDefault();
+
+            } else if (event.code === 'ArrowUp') {
+                if (options[selectedIndex]) {
+                    options[selectedIndex].classList.remove('selected-option');
+                }
+                selectedIndex = (selectedIndex - 1 + options.length) % options.length;
+                if (options[selectedIndex]) {
+                    options[selectedIndex].classList.add('selected-option');
+                }
+                event.preventDefault();
+
+            } else if (event.code === 'Enter') {
+                if (options[selectedIndex]) {
+                    chooseOption(options[selectedIndex].id);
+                    enterSound.play();
+                }
+            } else if (event.code === 'Escape') {
+                resetToMenu();
+            }
+        }); 
+    }
 }
 
 
+function resetToMenu() {
+    const terminalContent = document.getElementById('terminalContent');
+    if (!terminalContent) return;
+
+    // Réinitialise le contenu
+    terminalContent.innerHTML = '';
+    if (welcomeTerminal) {
+		console.log("hahahahhahahahh")
+        welcomeTerminal.innerHTML = "Welcome to FrogInDev Environment<br> You can use your keyboard arrows ↑↓ to navigate and use ↵ to validate. <br>You can also switch to terminal mod with the combination ctrl + space <br>";
+    }
+
+    // Données des options
+    const optionsData = [
+        { id: 'presentationOption', label: 'Presentation of FrogInDev' },
+        { id: 'experienceOption', label: 'Experiences of FrogInDev' },
+        { id: 'projectsOption', label: 'Projects of FrogInDev' },
+        { id: 'skillsOption', label: 'Skills of FrogInDev' },
+        { id: 'contactOption', label: 'Contact of FrogInDev' }
+    ];
+
+    // Recrée les options
+    optionsData.forEach(opt => {
+        const span = document.createElement('span');
+        span.classList.add('terminal-span');
+        span.id = opt.id;
+        span.innerText = `- ${opt.label}\n`;
+        terminalContent.appendChild(span);
+    });
+
+    // Réinitialisation navigation
+    options = Array.from(terminalContent.querySelectorAll('.terminal-span'));
+    if (!Array.isArray(options)) options = [];
+	selectedIndex = 0;
+    if (options[selectedIndex]) {
+        options[selectedIndex].classList.add('selected-option');
+    }
+
+    // Réinitialise le chemin
+    if (terminalInputPath) terminalInputPath.innerText = '~';
+}
+
+
+
+function chooseOption(option) {
+    const terminalContent = document.getElementById('terminalContent');
+    
+    // Cacher tout le contenu précédent
+    Array.from(terminalContent.children).forEach(el => {
+        el.style.display = 'none';
+    });
+
+    // Supprimer le surlignage
+    if (options[selectedIndex]) {
+        options[selectedIndex].classList.remove('selected-option');
+    }
+
+    // Gérer l'affichage de la section sélectionnée
+    terminalInputPath.innerText = option.replace('Option', '');
+
+    switch(option) {
+        case 'presentationOption':
+            showPresentation();
+            break;
+        case 'experienceOption':
+            showExperiences();
+            break;
+        case 'projectsOption':
+            showProjects();
+            break;
+        case 'skillsOption':
+            showSkills();
+            break;
+        case 'contactOption':
+            showContact();
+            break;
+    }
+}
+
+
+
+function showPresentation() {
+    let section = document.getElementById('sectionPresentation');
+	let terminalContent = document.getElementById('terminalContent');
+    if (!section) {
+        section = document.createElement('div');
+        section.id = 'sectionPresentation';
+        terminalContent.appendChild(section);
+		
+		
+    }
+    section.style.display = 'block';
+}
+
+
+
+function showExperiences(){
+	
+}
+
+function showProjects(){
+	
+}
+
+function showSkills(){
+	
+}
+
+function showContact(){
+	
+}
