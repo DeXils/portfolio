@@ -33,8 +33,8 @@ window.addEventListener('keydown', function() {
     // Supprimer l'écouteur après la première pression
     window.removeEventListener('keydown', arguments.callee);
 	
-	//startComputer();
-	showTerminal();
+	startComputer();
+	//showTerminal();
 });
 
 
