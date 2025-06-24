@@ -219,7 +219,7 @@ function showTerminal() {
     welcomeTerminal = document.createElement('span');
     welcomeTerminal.id = 'welcomeTerminal';
     welcomeTerminal.classList.add('terminal-span');
-    welcomeTerminal.innerHTML = "Welcome to FrogInDev Environment<br> You can use your keyboard arrows ↑↓ to navigate and use ↵ to validate. <br>You can also switch to terminal mod with the combination ctrl + space<br>";
+    welcomeTerminal.innerHTML = "Welcome to FrogInDev Environment<br> You can use your keyboard arrows ↑↓ to navigate use ↵ to validate and use ← to go back. <br>You can also switch to terminal mod with the combination ctrl + space<br>";
     columnTerminal.appendChild(welcomeTerminal);
 
     const terminalContent = document.createElement('div');
